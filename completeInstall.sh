@@ -33,6 +33,9 @@ ufw allow 22
 ufw default deny incoming
 ufw enable
 
+echo "we've configured ufw, but you should allow your ip through:"
+echo "ufw allow in from <your IP>"
+
 # install & configure docker.io & UFW rules
 echo "should we configure docker & its UFW rules?"
 read -r configure_docker_ufw
