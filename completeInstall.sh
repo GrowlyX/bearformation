@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # author - gorlwx
 # update & upgrade if required
 apt-get update
