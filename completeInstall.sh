@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# author - gorlwx
+# author - growlyx
 # update & upgrade if required
 apt-get update
 apt-get upgrade
@@ -31,12 +31,14 @@ systemctl restart sshd
 echo "configured ssh (please test)"
 
 # configure default UFW rules
+current_ip=$(echo "$SSH_CLIENT" | cut -d' ' -f 1)
+
 ufw allow 22
+ufw allow in from ${current_ip}
 ufw default deny incoming
 ufw enable
 
-echo "we've configured ufw, but you should allow your ip through:"
-echo "ufw allow in from <your IP>"
+echo "we've configured ufw and allowed your IP to access services."
 
 # install & configure docker.io & UFW rules
 echo "should we configure docker & its UFW rules?"
@@ -66,7 +68,12 @@ echo "should we configure redis?"
 read -r configure_redis
 
 if [ "$configure_redis" = true ]; then
-  apt install redis
+  sudo apt install lsb-release
+  curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+  echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+  sudo apt-get update
+  sudo apt-get install redis
+
   cp -R resources/redis.conf /etc/redis/
   systemctl restart redis
 
@@ -78,9 +85,17 @@ echo "should we configure mongo?"
 read -r configure_mongo
 
 if [ "$configure_mongo" = true ]; then
-  apt install mongodb
-  cp -R resources/mongodb.conf /etc/
-  systemctl restart mongodb
+  sudo apt-get install gnupg
+  curl -fsSL https://pgp.mongodb.com/server-6.0.asc | \
+     sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg \
+     --dearmor
+  echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+  sudo apt-get update
+  sudo apt-get install -y mongodb-org
+
+  cp -R resources/mongod.conf /etc/
+  systemctl restart mongod
 
   echo "configured mongo"
 fi
