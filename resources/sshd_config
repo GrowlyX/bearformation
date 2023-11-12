@@ -26,15 +26,15 @@ Include /etc/ssh/sshd_config.d/*.conf
 
 # Logging
 #SyslogFacility AUTH
-#LogLevel INFO
+LogLevel VERBOSE
 
 # Authentication:
 
 #LoginGraceTime 2m
 PermitRootLogin yes
 #StrictModes yes
-#MaxAuthTries 6
-#MaxSessions 10
+MaxAuthTries 2
+MaxSessions 2
 
 # scala start - enable pubkey auth
 PubkeyAuthentication yes
@@ -87,8 +87,8 @@ ChallengeResponseAuthentication no
 # and ChallengeResponseAuthentication to 'no'.
 UsePAM yes
 
-#AllowAgentForwarding yes
-#AllowTcpForwarding yes
+AllowAgentForwarding no
+AllowTcpForwarding no
 #GatewayPorts no
 X11Forwarding yes
 #X11DisplayOffset 10
@@ -96,11 +96,11 @@ X11Forwarding yes
 #PermitTTY yes
 PrintMotd no
 #PrintLastLog yes
-#TCPKeepAlive yes
+TCPKeepAlive no
 #PermitUserEnvironment no
-#Compression delayed
+Compression delayed
 #ClientAliveInterval 0
-#ClientAliveCountMax 3
+ClientAliveCountMax 2
 #UseDNS no
 #PidFile /var/run/sshd.pid
 #MaxStartups 10:30:100
@@ -109,7 +109,7 @@ PrintMotd no
 #VersionAddendum none
 
 # no default banner path
-#Banner none
+Banner /etc/banner
 
 # Allow client to pass locale environment variables
 AcceptEnv LANG LC_*
@@ -119,8 +119,8 @@ Subsystem sftp	/usr/lib/openssh/sftp-server
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs
-#	X11Forwarding no
+	X11Forwarding no
 #	AllowTcpForwarding no
 #	PermitTTY no
 #	ForceCommand cvs server
-PasswordAuthentication yes
+PasswordAuthentication no
