@@ -7,6 +7,15 @@ fi
 
 clear
 echo "Welcome to the bearformation script. This script will setup your system, which includes security and starship and other various things."
+echo "This script will install the following:"
+echo "1. Starship"
+echo "2. SSH"
+echo "3. UFW"
+echo "4. Docker"
+echo "5. Redis"
+echo "6. MongoDB"
+echo "7. Consul"
+echo "Script by: GrowlyX and modified by Emily"
 read -p "Do you want to continue with the script? [y/N] " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
 
 # Function to update and upgrade
